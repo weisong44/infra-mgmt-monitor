@@ -1,2 +1,6 @@
 # infra-mgmt-monitor
-Infrastructure management monitoring solution
+
+This project is to investigate infrastructure management monitoring solution with the following emphasis
+
+* Test
+
