@@ -32,7 +32,7 @@ to a Kafka topic "logs"
 is used; each module is defined as a serie using its path described above. Note: each serie may
 contain multiple metrics (columns)
 
-## Upstream commands
+## Downstream commands
 
 The downstream command mechanism is done using JMX, which is straightforward. When there is
 multiple applications running on the same host, it is necessary to know the port of the JMX
