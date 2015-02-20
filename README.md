@@ -73,5 +73,6 @@ Some important things to note
  
 ## TODO
 
+ - Look into InfluxDB query and write performance
  - Try out OpenTSDB over HBase, Grafana supports it
  
