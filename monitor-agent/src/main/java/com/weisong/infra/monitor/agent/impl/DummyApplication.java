@@ -38,13 +38,14 @@ public class DummyApplication {
 		@Override
 		public MonitoringData createReport() {
 			degree = (degree + 1) % 360.0;
+			double value = 2.0 * Math.PI * degree / 360;
 			MonitoringData report = factory.createMonitoringData(this);
-			report.addCounter("sine", Math.sin(Math.PI * degree / 360));
-			report.addCounter("cosine", Math.cos(Math.PI * degree / 360));
+			report.addCounter("sine", Math.sin(value));
+			report.addCounter("cosine", Math.cos(value));
 			return report;
 		}
-	}	
-	
+	}
+
 	@SuppressWarnings("resource")
 	static public void main(String[] args) {
 		new AnnotationConfigApplicationContext(MonitoringJavaConfig.class, JavaConfig.class);
