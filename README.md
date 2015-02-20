@@ -15,7 +15,7 @@ defined by application are put under this module, and a module is allowed to con
 
 An architecture as follows are used
 
-<image> 
+![Alt text](/arch.png?raw=true "The architecture")
 
 ## Upstream reporting
 
