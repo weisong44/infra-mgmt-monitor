@@ -1,5 +1,6 @@
 package com.weisong.infra.monitor.agent.reporter;
 
+import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
@@ -39,23 +40,30 @@ final public class MainModuleReporter extends BaseModuleReporter {
 		OperatingSystemMXBean os = ManagementFactory.getOperatingSystemMXBean(); 
 		report.addCounter("load", os.getSystemLoadAverage());
 		
+		// Garbage collection
+		for(GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {
+			String name = bean.getName().replace(" ", "");
+			report.addCounter("gcCount" + name, bean.getCollectionCount());
+			report.addCounter("gcTime" + name, bean.getCollectionTime());
+		}
+
 		// Memory
 		MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
-		report.addCounter("memory-heap-max", mem.getHeapMemoryUsage().getMax());
-		report.addCounter("memory-heap-used", mem.getHeapMemoryUsage().getUsed());
-		report.addCounter("memory-heap-committed", mem.getHeapMemoryUsage().getCommitted());
-		report.addCounter("memory-non-heap-usage-max", mem.getNonHeapMemoryUsage().getMax());
-		report.addCounter("memory-non-heap-usage-used", mem.getNonHeapMemoryUsage().getUsed());
-		report.addCounter("memory-non-heap-usage-committed", mem.getNonHeapMemoryUsage().getCommitted());
-		report.addCounter("memory-pending-finalization", mem.getObjectPendingFinalizationCount());
+		report.addCounter("memoryHeapMax", mem.getHeapMemoryUsage().getMax());
+		report.addCounter("memoryHeapUsed", mem.getHeapMemoryUsage().getUsed());
+		report.addCounter("memoryHeapCommitted", mem.getHeapMemoryUsage().getCommitted());
+		report.addCounter("memoryNonHeapMax", mem.getNonHeapMemoryUsage().getMax());
+		report.addCounter("memoryNonHeapUsed", mem.getNonHeapMemoryUsage().getUsed());
+		report.addCounter("memoryNonHeapCommitted", mem.getNonHeapMemoryUsage().getCommitted());
+		report.addCounter("memoryPendingFinalization", mem.getObjectPendingFinalizationCount());
 		Runtime rt = Runtime.getRuntime();
-		report.addCounter("memory-total", rt.totalMemory());
-		report.addCounter("memory-free", rt.freeMemory());
-		report.addCounter("memory-max", rt.maxMemory());
+		report.addCounter("memoryTotal", rt.totalMemory());
+		report.addCounter("memoryFree", rt.freeMemory());
+		report.addCounter("memoryMax", rt.maxMemory());
 		// Thread
 		ThreadMXBean t = ManagementFactory.getThreadMXBean();
-		report.addCounter("thread-count", t.getThreadCount());
-		report.addCounter("thread-started-count", t.getTotalStartedThreadCount());
+		report.addCounter("threadCount", t.getThreadCount());
+		report.addCounter("threadStartedCount", t.getTotalStartedThreadCount());
 
 		return report;
 	}

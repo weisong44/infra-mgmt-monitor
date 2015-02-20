@@ -12,7 +12,7 @@ import com.weisong.infra.monitor.common.MonitoringData;
 
 public class DefaultMonitoringDataFactory implements MonitoringDataFactory {
 	
-	final static private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss Z");
+	final static private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss Z");
 	
 	private String hostname;
 	private String ipAddr;

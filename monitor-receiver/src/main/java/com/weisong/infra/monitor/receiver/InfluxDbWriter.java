@@ -16,7 +16,7 @@ import com.weisong.infra.monitor.util.JsonUtil;
 public class InfluxDbWriter {
 	
 	final static public String DB_NAME = "weisong-metrics";
-	final static public SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss Z");
+	final static public SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss Z");
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -66,14 +66,9 @@ public class InfluxDbWriter {
 			.columns(columns)
 			.values(values)
 			.build();
-		
-		String str = String.format("%d %s %s", timestamp, 
-			data.getCounters().get("thread-count"), 
-			data.getCounters().get("memory-heap-max")
-		);
-		
-		logger.info(String.format("%s  %s", data.getTimestamp(), str));
-		
+				
 		influxDb.write(DB_NAME, TimeUnit.MILLISECONDS, serie);
+		
+		logger.info(String.format("%s %s", data.getTimestamp(), serieName));
 	}
 }

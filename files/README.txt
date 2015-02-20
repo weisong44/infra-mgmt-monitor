@@ -49,7 +49,7 @@ Edit data sources section
 datasources: {
     influxdb: {
         type: 'influxdb',
-        url: "http://192.168.1.27:8086/db/carbon",
+        url: "http://192.168.1.27:8086/db/influxdb",
         username: 'weisong',
         password: 'songwei',
     },
