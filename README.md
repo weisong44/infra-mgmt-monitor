@@ -15,7 +15,7 @@ defined by application are put under this module, and a module is allowed to con
 
 An architecture as follows are used
 
-<img src="arch.png" width="400">
+<img src="files/arch.png" width="400">
 
 
 ## Upstream reporting
@@ -75,4 +75,9 @@ Some important things to note
 
  - Look into InfluxDB query and write performance
  - Try out OpenTSDB over HBase, Grafana supports it
+ 
+## Setup notes
+
+ - Build: mvn clean install -DskipTests
+ - 3 Ubuntu VM's are used, instructions are under files directory
  
