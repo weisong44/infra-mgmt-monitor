@@ -47,7 +47,7 @@ Grafana is used as the general purpose user interface.
 
 Some important things to note
 
- - The overall architecture is horizontally scalable
+ - The overall architecture is horizontally scalable :)
  - The use of log files for reporting has very low overhead on applications. It is desirable 
    as long as an transportation infrastructure is available, which is the likely case for 
    may environments. 
@@ -58,9 +58,13 @@ Some important things to note
    is a preparation for intermediate computation - many cases the reported raw data will go
    through some sort of stream processing facilities to have metrics calculated. In addition,
    Kafka also serves as a buffer for raw data.
- - InfluxDB itself claims to be a high performance and scalable time series database. 
-   But it is a relatively new product, which will have to be battle proofed. Alternatives
-   could be OpenTSDB, if stream product such as Spark is also used.
+ - InfluxDB itself claims to be a high performance and scalable time series database.
+   It offers a SQL-like query interface and rich set of language bindings, which were simple
+   enough to start with. In addition, it's been actively developed. But it is relatively 
+   new (1 year old), which will have to be battle proofed. Not much investigation has 
+   been done in terms of its query performance. It internally uses LevelDB, which is a key-value
+   store: this is a bit doubtable! Alternatives could be OpenTSDB, if stream product such as 
+   Spark is also used.
  - Grafana is a neat general purpose dashboard
  - RRDTool was also looked at, and deemed to be not suitable: it is generally a single-box
    solution. The Carbon layer Graphite added some tweaks to make the RRD-based Whisper
