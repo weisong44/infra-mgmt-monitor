@@ -1,6 +1,5 @@
 package com.weisong.infra.monitor.agent.impl;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +7,8 @@ import javax.annotation.PostConstruct;
 
 import lombok.Setter;
 
+import org.apache.flume.clients.log4jappender.LoadBalancingLog4jAppender;
+import org.apache.log4j.Appender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.slf4j.Logger;
@@ -31,7 +32,10 @@ public class DefaultMonitoringAgent implements MonitoringAgent {
 	@Setter	@Value("${monitor.agent.reporting.interval:30}")
 	private int reportingInterval; // in seconds
 	
-	@Value("${monitor.agent.log.file:undefined}")
+	@Value("${monitor.agent.flume.hosts:null}")
+	private String flumeHostAndPorts;
+	
+	@Value("${monitor.agent.log.file:null}")
 	private String logFileName;
 	
 	@Value("${app.name}")
@@ -96,6 +100,27 @@ public class DefaultMonitoringAgent implements MonitoringAgent {
 		}
 	}
 	
+	private Appender createMonitoringLogAppender() throws Exception {
+		if(flumeHostAndPorts != null) {
+			LoadBalancingLog4jAppender appender = new LoadBalancingLog4jAppender();
+			appender.setHosts(flumeHostAndPorts);
+			appender.setUnsafeMode(true);
+			appender.activateOptions();
+			return appender;
+		}
+		else if(logFileName != null) {
+			RollingFileAppender appender = new RollingFileAppender(
+					new PatternLayout("%m%n"), logFileName);
+			appender.setMaxFileSize("10240KB");
+			appender.setMaxBackupIndex(1);
+			return appender;
+		}
+		else {
+			throw new RuntimeException(
+				"Neither monitor.agent.log.file nor monitor.agent.flume.hosts is defined");
+		}
+	}
+	
 	private void addMonitoringLogAppender() {
 		
 		if("undefined".equals(logFileName)) {
@@ -103,15 +128,12 @@ public class DefaultMonitoringAgent implements MonitoringAgent {
 		}
 		
 		try {
-			RollingFileAppender appender = new RollingFileAppender(
-					new PatternLayout("%m%n"), logFileName);
-			appender.setMaxFileSize("10240KB");
-			appender.setMaxBackupIndex(1);
 			org.apache.log4j.Logger mLogger = org.apache.log4j.Logger.getLogger("monitor");
+			Appender appender = createMonitoringLogAppender();
 			mLogger.setAdditivity(false);
 			mLogger.addAppender(appender);
 		} 
-		catch (IOException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
