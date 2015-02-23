@@ -1,4 +1,4 @@
-package com.weisong.infra.monitor.receiver;
+package com.weisong.infra.monitor.receiver.influxdb;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

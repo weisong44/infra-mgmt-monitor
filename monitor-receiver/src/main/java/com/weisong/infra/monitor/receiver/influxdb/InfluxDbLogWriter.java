@@ -1,4 +1,4 @@
-package com.weisong.infra.monitor.receiver;
+package com.weisong.infra.monitor.receiver.influxdb;
 
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.weisong.infra.monitor.common.MonitoringData;
-import com.weisong.infra.monitor.util.JsonUtil;
+import com.weisong.infra.monitor.receiver.LogWriter;
 
-public class InfluxDbWriter {
+public class InfluxDbLogWriter implements LogWriter {
 	
 	final static public String DB_NAME = "weisong-metrics";
 	final static public SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss Z");
@@ -22,7 +22,7 @@ public class InfluxDbWriter {
 	
 	private InfluxDB influxDb;
 	
-	public InfluxDbWriter(String dbHost) {
+	public InfluxDbLogWriter(String dbHost) {
 		String dbUrl = String.format("http://%s:8086", dbHost);
 		influxDb = InfluxDBFactory.connect(dbUrl, "weisong", "songwei");
 	}
@@ -31,13 +31,8 @@ public class InfluxDbWriter {
 		influxDb.createDatabase(DB_NAME);
 	}
 	
-	public void write(String logMessage) throws Exception {
-		
-		MonitoringData data = JsonUtil.toObject(logMessage, MonitoringData.class);
-		if(data == null) {
-			logger.info("Failed to write message: " + logMessage);
-			return;
-		}
+	@Override
+	public void write(MonitoringData data) throws Exception {
 		
 		String serieName = String.format("domain/%s/%s", data.getIpAddr(), data.getPath());
 

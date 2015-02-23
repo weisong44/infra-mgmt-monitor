@@ -19,6 +19,7 @@ public class JRobinTest {
 	boolean shutdown = false;
 	
 	@Test
+	@SuppressWarnings("resource")
 	public void testRead() throws Exception {
 		
 		BufferedReader br = new BufferedReader(new FileReader(

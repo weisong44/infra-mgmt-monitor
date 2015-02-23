@@ -32,10 +32,10 @@ public class DefaultMonitoringAgent implements MonitoringAgent {
 	@Setter	@Value("${monitor.agent.reporting.interval:30}")
 	private int reportingInterval; // in seconds
 	
-	@Value("${monitor.agent.flume.hosts:null}")
+	@Value("${monitor.agent.flume.hosts}")
 	private String flumeHostAndPorts;
 	
-	@Value("${monitor.agent.log.file:null}")
+	@Value("${monitor.agent.log.file}")
 	private String logFileName;
 	
 	@Value("${app.name}")
@@ -101,14 +101,14 @@ public class DefaultMonitoringAgent implements MonitoringAgent {
 	}
 	
 	private Appender createMonitoringLogAppender() throws Exception {
-		if(flumeHostAndPorts != null) {
+		if(flumeHostAndPorts.startsWith("$") == false) {
 			LoadBalancingLog4jAppender appender = new LoadBalancingLog4jAppender();
 			appender.setHosts(flumeHostAndPorts);
 			appender.setUnsafeMode(true);
 			appender.activateOptions();
 			return appender;
 		}
-		else if(logFileName != null) {
+		else if(logFileName.startsWith("$") == false) {
 			RollingFileAppender appender = new RollingFileAppender(
 					new PatternLayout("%m%n"), logFileName);
 			appender.setMaxFileSize("10240KB");
