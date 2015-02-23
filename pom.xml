@@ -10,6 +10,9 @@
 		<module>monitor-common</module>
 		<module>monitor-agent</module>
 		<module>monitor-receiver</module>
+		<module>monitor-opentsdb</module>
+		<module>collectd-api</module>
 	</modules>
 
 </project>
+
