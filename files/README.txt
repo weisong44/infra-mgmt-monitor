@@ -84,3 +84,88 @@ EOF
 > cd
 > workspace/set1/bin/start_all.sh
 
+Install Oracle JDK
+==================
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java7-installer
+
+vi /etc/bash.bashrc
+JAVA_HOME=/usr
+
+HBase setup
+===========
+Download from
+http://apache.cs.utah.edu/hbase/hbase-0.98.10.1/
+
+mkdir ~/data/hbase
+mkdir ~/data/zookeeper
+
+Edit hbase-site.xml
+
+<configuration>
+  <property>
+    <name>hbase.rootdir</name>
+    <value>file:///home/weisong/data/hbase</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/home/weisong/data/zookeeper</value>
+  </property>
+</configuration>
+
+
+OpenTSDB setup
+==============
+1. Installation
+sudo apt-get install autoconf
+git clone git://github.com/OpenTSDB/opentsdb.git
+cd opentsdb
+./build.sh
+
+2. Create tables
+env COMPRESSION=NONE HBASE_HOME=/home/weisong/tools/hbase ./src/create_table.sh
+
+3. Configuration
+mkdir -p ~/data/opentsdb/static
+mkdir -p ~/data/pentsdb/cache
+
+vi src/opentsdb.conf
+tsd.http.staticroot = /home/weisong/data/opentsdb/static
+tsd.network.port = 4242
+tsd.http.cachedir = /home/weisong/data/opentsdb/cache
+tsd.storage.hbase.zk_quorum = localhost
+tsd.core.auto_create_metrics = true
+tsd.http.request.cors_domains=http://192.168.59.5:8000
+
+4. Start OpenTSDB
+cd src
+../build/tsdb tsd
+
+Grafana setup
+=============
+1. Download
+http://grafanarel.s3.amazonaws.com/grafana-1.9.1.tar.gz
+
+2. Configuration
+cd conf
+cp config.sample.js config.js
+vi config.js
+
+      datasources: {
+        opentsdb: {
+          type: 'opentsdb',
+          url: "http://192.168.59.5:4242",
+        },
+        grafana: {
+          type: 'elasticsearch',
+          url: "http://192.168.59.5:9200",
+          index: 'grafana-dash',
+          grafanaDB: true
+        },
+      },
+
+3. Start
+cd ~/tools/grafana
+python -m SimpleHTTPServer
+
