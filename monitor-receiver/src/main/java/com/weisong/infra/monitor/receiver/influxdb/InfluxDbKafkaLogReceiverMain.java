@@ -23,7 +23,7 @@ public class InfluxDbKafkaLogReceiverMain {
 	
 	static void printUsageAndExit() {
 		System.out.println("Usage:\n"
-			+ "    java LogReceiver <kafka-host> <influx-db-host>");
+			+ "    java " + InfluxDbKafkaLogReceiverMain.class.getName() + " <kafka-host> <influx-db-host>");
 		System.exit(-1);
 	}
 

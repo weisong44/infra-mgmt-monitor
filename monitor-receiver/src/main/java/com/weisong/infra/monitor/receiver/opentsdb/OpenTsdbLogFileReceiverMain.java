@@ -31,7 +31,7 @@ public class OpenTsdbLogFileReceiverMain {
 
 	static void printUsageAndExit() {
 		System.out.println("Usage:\n"
-				+ "    java OpenTsdbLogFileBasedReceiver <opentsdb-host> <log-file>");
+			+ "    java " + OpenTsdbLogFileReceiverMain.class.getName() + " <opentsdb-host> <log-file>\n");
 		System.exit(-1);
 	}
 

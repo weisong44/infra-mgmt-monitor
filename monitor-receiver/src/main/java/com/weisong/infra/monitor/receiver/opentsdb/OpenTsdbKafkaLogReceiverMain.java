@@ -26,7 +26,7 @@ public class OpenTsdbKafkaLogReceiverMain {
 	
 	static void printUsageAndExit() {
 		System.out.println("Usage:\n"
-			+ "    java OpenTsdbLogReceiver <kafka-host> <opentsdb-host>");
+			+ "    java " + OpenTsdbKafkaLogReceiverMain.class.getName() + " <kafka-host> <opentsdb-host>");
 		System.exit(-1);
 	}
 
