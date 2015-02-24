@@ -109,6 +109,9 @@ public class OpenTsdbLogWriter implements LogWriter {
 	private BufferedReader is;
 	private Socket socket;
 
+	private long logsWritten;
+	private long logsSkipped;
+	
 	public OpenTsdbLogWriter(String server, int port) {
 		this.server = server;
 		this.port = port;
@@ -175,9 +178,19 @@ public class OpenTsdbLogWriter implements LogWriter {
 			sb.append(' ').append(data.getCounters().get(metric));
 			sb.append(' ').append(tags);
 			String cmd = sb.toString();
-			logger.info(cmd);
+			
+			logger.debug(cmd);
+			
 			if(os != null) {
 				os.println(cmd);
+				if(++logsWritten % 1000 == 0) {
+					logger.info(String.format("Written logs: %d", logsWritten));
+				}
+			}
+			else {
+				if(++logsSkipped % 1000 == 0) {
+					logger.info(String.format("Skipped logs: %d", logsSkipped));
+				}
 			}
 		}
 	}
