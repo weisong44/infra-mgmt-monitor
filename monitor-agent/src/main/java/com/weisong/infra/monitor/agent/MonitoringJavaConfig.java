@@ -51,26 +51,27 @@ public class MonitoringJavaConfig {
     @Bean
     public ConnectorServerFactoryBean connectorServerFactoryBean() throws Exception {
         ConnectorServerFactoryBean factory = new ConnectorServerFactoryBean();
-        String objName = String.format("%s:root=%s,name=%s", 
-        		MBEAN_DOMAIN, appName, "ConnectorServerFactory");
-        factory.setObjectName(objName);
+        factory.setObjectName(createMBeanName(factory));
         factory.setServiceUrl(String.format(JMX_RMI_URL, rmiPort));
         return factory;
     }
 
-    static int index = 1;
+    private ObjectName createMBeanName(Object bean) throws MalformedObjectNameException {
+		String name = bean.getClass().getSimpleName();
+		if(bean instanceof ModuleReporter) {
+			name = ((ModuleReporter) bean).getPath();
+		}
+		String objName = String.format("%s:application=%s,name=%s", MBEAN_DOMAIN, appName, name);
+		return new ObjectName(objName);
+    }
     
     @Bean
     public ObjectNamingStrategy getObjectNamingStrategy() {
     	return new ObjectNamingStrategy() {
-			@Override public ObjectName getObjectName(Object managedBean, String beanKey)
+			@Override
+			public ObjectName getObjectName(Object managedBean, String beanKey)
 					throws MalformedObjectNameException {
-				String name = managedBean.getClass().getSimpleName();
-				if(managedBean instanceof ModuleReporter) {
-					name = ((ModuleReporter) managedBean).getPath();
-				}
-				String objName = String.format("%s:root=%s,name=%s", MBEAN_DOMAIN, appName, name);
-				return new ObjectName(objName);
+				return createMBeanName(managedBean);
 			}
 		};
     }
