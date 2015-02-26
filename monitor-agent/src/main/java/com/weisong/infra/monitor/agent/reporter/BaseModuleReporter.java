@@ -3,12 +3,15 @@ package com.weisong.infra.monitor.agent.reporter;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
 import com.weisong.infra.monitor.agent.ModuleReporter;
 import com.weisong.infra.monitor.agent.MonitoringAgent;
 import com.weisong.infra.monitor.agent.MonitoringDataFactory;
-import com.weisong.infra.monitor.common.MonitoringData;
+import com.weisong.infra.monitor.util.JsonUtil;
 
+@ManagedResource
 abstract public class BaseModuleReporter implements ModuleReporter {
 	
     @Autowired protected MonitoringDataFactory factory;
@@ -33,16 +36,13 @@ abstract public class BaseModuleReporter implements ModuleReporter {
 		return parent.getPath() + "/" + getName();
 	}
 	
-	@Override
-	public MonitoringData createMonitoringData(String name) {
-		return factory.createMonitoringData(this);
+	@ManagedOperation
+	public String createJsonReport() {
+		return JsonUtil.toJsonString(createReport());
 	}
-
-	@Override
-	public void sendMonitoringData(String name, Populator populator) {
-		MonitoringData data = createMonitoringData(name);
-		populator.populate(data);
-		agent.sendMonitoringData(data);
+	
+	@ManagedOperation
+	public void sendReport() {
+		agent.sendMonitoringData(createReport());
 	}
-
 }

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.weisong.infra.monitor.agent.ModuleReporter.Populator;
 import com.weisong.infra.monitor.agent.DefaultMonitoringAgentTest.JavaConfig;
 import com.weisong.infra.monitor.agent.reporter.BaseModuleReporter;
 import com.weisong.infra.monitor.agent.reporter.MainModuleReporter;
@@ -56,23 +55,5 @@ public class DefaultMonitoringAgentTest {
     	agent.setReportingInterval(1);
     	Thread.sleep(3000);
     	Assert.assertTrue(reportCreated);
-    }
-
-    @Test
-    public void testSendEvent() throws Exception {
-    	
-    	Thread.sleep(3000);
-    	
-    	// Method 1
-    	reporter.sendMonitoringData("test-event1", new Populator() {
-			@Override public void populate(MonitoringData data) {
-				data.addProperty("test", "test");
-			}
-		});
-    	
-    	// Method 2
-    	MonitoringData data = reporter.createMonitoringData("test-event2");
-		data.addProperty("test", "test");
-		agent.sendMonitoringData(data);
     }
 }

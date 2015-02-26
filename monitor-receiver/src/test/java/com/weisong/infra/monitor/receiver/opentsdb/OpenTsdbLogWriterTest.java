@@ -65,7 +65,7 @@ public class OpenTsdbLogWriterTest {
         }
         
         synchronized (this) {
-			this.wait();
+			this.wait(5000); // Wait for 5 seconds
 		}
 	}
 }

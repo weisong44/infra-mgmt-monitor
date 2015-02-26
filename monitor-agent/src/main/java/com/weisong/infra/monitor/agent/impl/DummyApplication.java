@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
 import com.weisong.infra.monitor.agent.MonitoringJavaConfig;
 import com.weisong.infra.monitor.agent.reporter.BaseModuleReporter;
@@ -22,6 +23,7 @@ public class DummyApplication {
 		}
 	}
 	
+	@ManagedResource
 	static public class WaveReporter extends BaseModuleReporter {
 
 		private double degree;
@@ -34,7 +36,7 @@ public class DummyApplication {
 		public String getName() {
 			return "wave";
 		}
-		
+
 		@Override
 		public MonitoringData createReport() {
 			degree = (degree + 1) % 360.0;
