@@ -49,9 +49,9 @@ abstract public class BaseModuleReporter implements ModuleReporter {
 		agent.sendMonitoringData(createReport());
 	}
 
-	public MonitoringData createMonitoringData(ModuleReporter reporter) {
-		MonitoringData data = new MonitoringData(reporter.getName());
-		data.setPath(reporter.getPath());
+	public MonitoringData createMonitoringData() {
+		MonitoringData data = new MonitoringData(getName());
+		data.setPath(getPath());
 		data.setHostname(HostUtil.getHostname());
 		data.setIpAddr(HostUtil.getHostIpAddress());
 		data.setTimestamp(DateUtil.format(new Date()));

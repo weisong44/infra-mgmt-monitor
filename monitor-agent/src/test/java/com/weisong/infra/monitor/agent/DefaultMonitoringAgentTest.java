@@ -39,9 +39,10 @@ public class DefaultMonitoringAgentTest {
 		public String getName() {
 			return "test";
 		}
+
 		@Override
 		public MonitoringData createReport() {
-			MonitoringData report = createMonitoringData(this);
+			MonitoringData report = createMonitoringData();
 			reportCreated = true;
 			return report;
 		}

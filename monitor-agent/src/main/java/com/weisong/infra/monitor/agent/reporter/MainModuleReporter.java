@@ -33,7 +33,7 @@ final public class MainModuleReporter extends BaseModuleReporter {
 
 	@Override
 	public MonitoringData createReport() {
-		MonitoringData report = createMonitoringData(this);
+		MonitoringData report = createMonitoringData();
 		report.addProperty("jmxPort", rmiPort);
 
 		// Operating system
