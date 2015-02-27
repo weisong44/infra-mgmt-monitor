@@ -1,5 +1,7 @@
 package com.weisong.infra.monitor.agent.reporter;
 
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +10,14 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 
 import com.weisong.infra.monitor.agent.ModuleReporter;
 import com.weisong.infra.monitor.agent.MonitoringAgent;
-import com.weisong.infra.monitor.agent.MonitoringDataFactory;
+import com.weisong.infra.monitor.agent.util.DateUtil;
+import com.weisong.infra.monitor.agent.util.HostUtil;
+import com.weisong.infra.monitor.common.MonitoringData;
 import com.weisong.infra.monitor.util.JsonUtil;
 
 @ManagedResource
 abstract public class BaseModuleReporter implements ModuleReporter {
 	
-    @Autowired protected MonitoringDataFactory factory;
 	@Autowired protected MonitoringAgent agent;
 
 	protected ModuleReporter parent;
@@ -44,5 +47,14 @@ abstract public class BaseModuleReporter implements ModuleReporter {
 	@ManagedOperation
 	public void sendReport() {
 		agent.sendMonitoringData(createReport());
+	}
+
+	public MonitoringData createMonitoringData(ModuleReporter reporter) {
+		MonitoringData data = new MonitoringData(reporter.getName());
+		data.setPath(reporter.getPath());
+		data.setHostname(HostUtil.getHostname());
+		data.setIpAddr(HostUtil.getHostIpAddress());
+		data.setTimestamp(DateUtil.format(new Date()));
+		return data;
 	}
 }

@@ -3,16 +3,39 @@ package com.weisong.infra.monitor.agent.util;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AddrUtil {
+public class HostUtil {
 
-	final static public Logger logger = LoggerFactory.getLogger(AddrUtil.class);
+	final static private String ipAddr;
+	final static private String hostname;
 	
+	final static public Logger logger = LoggerFactory.getLogger(HostUtil.class);
+	
+	static {
+		hostname = getHostname();
+		ipAddr = getHostIpAddress();
+	}
+	
+	static public String getHostname() {
+		if(hostname != null) {
+			return hostname;
+		}
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			return "unknown";
+		}
+	}
+
 	static public String getHostIpAddress() {
+		if(ipAddr != null) {
+			return ipAddr;
+		}
 		try {
 			logger.debug("Trying to find the host IP address:");
 			InetAddress local = null, global = null;

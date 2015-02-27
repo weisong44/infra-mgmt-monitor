@@ -17,7 +17,6 @@ import org.springframework.remoting.rmi.RmiRegistryFactoryBean;
 
 import com.weisong.common.javaconfig.CommonCombinedJavaConfig;
 import com.weisong.infra.monitor.agent.impl.DefaultMonitoringAgent;
-import com.weisong.infra.monitor.agent.impl.DefaultMonitoringDataFactory;
 import com.weisong.infra.monitor.agent.reporter.MainModuleReporter;
 
 @Configuration
@@ -66,7 +65,7 @@ public class MonitoringJavaConfig {
     }
     
     @Bean
-    public ObjectNamingStrategy getObjectNamingStrategy() {
+    public ObjectNamingStrategy objectNamingStrategy() {
     	return new ObjectNamingStrategy() {
 			@Override
 			public ObjectName getObjectName(Object managedBean, String beanKey)
@@ -82,17 +81,12 @@ public class MonitoringJavaConfig {
     }
     
     @Bean
-    public MonitoringAgent getMonitoringAgent() {
+    public MonitoringAgent monitoringAgent() {
     	return new DefaultMonitoringAgent();
-    }
-
-    @Bean
-    public MonitoringDataFactory getMonitoringFactory() {
-    	return new DefaultMonitoringDataFactory();
     }
     
     @Bean
-    public MainModuleReporter getMainReporter() throws Exception {
+    public MainModuleReporter mainReporter() throws Exception {
     	return new MainModuleReporter();
     }
 }

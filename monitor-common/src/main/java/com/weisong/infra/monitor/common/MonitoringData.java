@@ -29,7 +29,7 @@ final public class MonitoringData {
 		getProperties().put(key, value);
 	}
 	
-	public void addCounter(String key, Number value) {
-		getCounters().put(key, value);
+	public void addCounter(String name, Number value) {
+		getCounters().put(name, value);
 	}
 }

@@ -41,7 +41,7 @@ public class DefaultMonitoringAgentTest {
 		}
 		@Override
 		public MonitoringData createReport() {
-			MonitoringData report = factory.createMonitoringData(this);
+			MonitoringData report = createMonitoringData(this);
 			reportCreated = true;
 			return report;
 		}
