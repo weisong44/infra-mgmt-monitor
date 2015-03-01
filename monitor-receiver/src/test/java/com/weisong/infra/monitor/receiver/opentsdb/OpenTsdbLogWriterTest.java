@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.weisong.infra.monitor.common.MonitoringData;
+import com.weisong.infra.monitor.receiver.LogWriterUtil;
 import com.weisong.infra.monitor.util.JsonUtil;
 
 public class OpenTsdbLogWriterTest {
@@ -28,20 +29,20 @@ public class OpenTsdbLogWriterTest {
 	
 	@Test
 	public void testCamelCaseConversion() {
-		Assert.assertEquals("", writer.getMetricName("").toString());
-		Assert.assertEquals("memory", writer.getMetricName("memory").toString());
-		Assert.assertEquals("memory.used", writer.getMetricName("memoryUsed").toString());
-		Assert.assertEquals("memory.used.with.some1#-_?", writer.getMetricName("memoryUsedWithSome1#-_?").toString());
+		Assert.assertEquals("", LogWriterUtil.getMetricName("").toString());
+		Assert.assertEquals("memory", LogWriterUtil.getMetricName("memory").toString());
+		Assert.assertEquals("memory.used", LogWriterUtil.getMetricName("memoryUsed").toString());
+		Assert.assertEquals("memory.used.with.some1#-_?", LogWriterUtil.getMetricName("memoryUsedWithSome1#-_?").toString());
 	}
 	
 	@Test
 	public void getGetAppName() {
-		Assert.assertEquals("", writer.getAppName(""));
-		Assert.assertEquals("", writer.getAppName("/"));
-		Assert.assertEquals("appName", writer.getAppName("appName"));
-		Assert.assertEquals("appName", writer.getAppName("appName/"));
-		Assert.assertEquals("appName", writer.getAppName("appName/1"));
-		Assert.assertEquals("appName", writer.getAppName("appName/1/2//3"));
+		Assert.assertEquals("", LogWriterUtil.getAppName(""));
+		Assert.assertEquals("", LogWriterUtil.getAppName("/"));
+		Assert.assertEquals("appName", LogWriterUtil.getAppName("appName"));
+		Assert.assertEquals("appName", LogWriterUtil.getAppName("appName/"));
+		Assert.assertEquals("appName", LogWriterUtil.getAppName("appName/1"));
+		Assert.assertEquals("appName", LogWriterUtil.getAppName("appName/1/2//3"));
 	}
 	
 	@Test

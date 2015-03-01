@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.weisong.infra.monitor.agent.util.HostUtil;
 import com.weisong.infra.monitor.common.MonitoringData;
 
 final public class MainModuleReporter extends BaseModuleReporter {
@@ -28,7 +29,7 @@ final public class MainModuleReporter extends BaseModuleReporter {
 	
 	@Override
 	public String getPath() {
-		return getName();
+		return HostUtil.getHostIpAddress() + "/" + getName();
 	}
 
 	@Override

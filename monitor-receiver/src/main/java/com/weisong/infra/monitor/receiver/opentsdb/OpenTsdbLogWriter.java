@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.weisong.infra.monitor.common.MonitoringData;
 import com.weisong.infra.monitor.receiver.LogWriter;
+import com.weisong.infra.monitor.receiver.LogWriterUtil;
 
 public class OpenTsdbLogWriter implements LogWriter {
 	
@@ -135,28 +136,8 @@ public class OpenTsdbLogWriter implements LogWriter {
 		return os != null;
 	}
 	
-	String getAppName(String path) {
-		return path.contains("/") ?
-			path.substring(0, path.indexOf('/'))
-		  :	path;
-	}
-	
 	StringBuffer appendTag(StringBuffer sb, String tag, String value) {
 		return sb.append(" ").append(tag).append("=").append(value);
-	}
-	
-	StringBuffer getMetricName(String camalcased) {
-		StringBuffer sb = new StringBuffer();
-		for(int i = 0; i < camalcased.length(); i++) {
-			Character c = camalcased.charAt(i);
-			if(Character.isUpperCase(c)) {
-				sb.append('.').append(Character.toLowerCase(c));
-			}
-			else {
-				sb.append(c);
-			}
-		}
-		return sb;
 	}
 	
 	@Override
@@ -167,13 +148,13 @@ public class OpenTsdbLogWriter implements LogWriter {
 		StringBuffer tags = new StringBuffer();
 		appendTag(tags, "host", data.getHostname());
 		appendTag(tags, "addr", data.getIpAddr());
-		appendTag(tags, "app", getAppName(data.getPath()));
+		appendTag(tags, "app", LogWriterUtil.getAppName(data.getPath()));
 		appendTag(tags, "path", data.getPath());
 		appendTag(tags, "module", data.getName());
 
 		for(String metric : data.getCounters().keySet()) {
 			StringBuffer sb = new StringBuffer("put");
-			sb.append(' ').append(getMetricName(metric));
+			sb.append(' ').append(LogWriterUtil.getMetricName(metric));
 			sb.append(' ').append(timestamp);
 			sb.append(' ').append(data.getCounters().get(metric));
 			sb.append(' ').append(tags);

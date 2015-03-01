@@ -12,7 +12,6 @@ import com.weisong.infra.monitor.agent.MonitoringJavaConfig;
 import com.weisong.infra.monitor.agent.reporter.BaseModuleReporter;
 import com.weisong.infra.monitor.agent.reporter.MainModuleReporter;
 import com.weisong.infra.monitor.common.MonitoringData;
-import com.weisong.infra.monitor.common.MonitoringEvent;
 
 public class DummyApplication {
 	
@@ -36,10 +35,12 @@ public class DummyApplication {
 			new Thread() {
 				@Override public void run() {
 					while(true) {
-						MonitoringData data = createMonitoringData();
-						data.addEvent("DummyAppEvent")
-							.addProperty("time", new Date());
-						agent.sendMonitoringData(data);
+						if(agent != null) {
+							MonitoringData data = createMonitoringData();
+							data.addEvent("DummyAppEvent")
+								.addProperty("time", new Date());
+							agent.sendMonitoringData(data);
+						}
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e) {
