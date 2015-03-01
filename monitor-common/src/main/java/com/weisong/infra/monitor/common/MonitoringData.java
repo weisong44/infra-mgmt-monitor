@@ -13,10 +13,11 @@ final public class MonitoringData {
 	@Getter @Setter private String ipAddr; 
 	@Getter @Setter private String hostname;
 	@Getter @Setter private String timestamp;
-	@Getter @Setter private String path; 
+	@Getter @Setter private String path;
 
+	@Getter private String type;
 	@Getter private String name;
-	
+
 	@Getter private Map<String, Object> properties = new HashMap<>(5);
 	@Getter private Map<String, Number> counters = new HashMap<>(5);
 	@Getter private List<MonitoringEvent> events = new LinkedList<>();
@@ -24,7 +25,8 @@ final public class MonitoringData {
 	protected MonitoringData() {
 	}
 
-	public MonitoringData(String name) {
+	public MonitoringData(String type, String name) {
+		this.type = type;
 		this.name = name;
 	}
 

@@ -16,11 +16,7 @@ public class EsLogWriterTest {
 	
 	@Before
 	public void setup() {
-		writer = new EsLogWriter("weisong-es"
-			, "192.168.1.42:9300"
-			, "192.168.1.43:9300"
-			, "192.168.1.44:9300"
-		);
+		writer = new EsLogWriter(EsConfig.clusterName, EsConfig.hostAndPorts);
 	}
 	
 	@After
@@ -32,6 +28,7 @@ public class EsLogWriterTest {
 	public void testSend() throws Exception {
 		
 		writer.start();
+
 		for(int i = 0; i < 50; i++) {
 			if(writer.isConnected()) {
 				break;
@@ -47,9 +44,5 @@ public class EsLogWriterTest {
         		writer.write(data);
         	}
         }
-        
-        synchronized (this) {
-			this.wait(500000); // Wait for 5 seconds
-		}
 	}
 }

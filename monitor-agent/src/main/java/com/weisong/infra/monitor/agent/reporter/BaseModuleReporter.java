@@ -50,7 +50,7 @@ abstract public class BaseModuleReporter implements ModuleReporter {
 	}
 
 	public MonitoringData createMonitoringData() {
-		MonitoringData data = new MonitoringData(getName());
+		MonitoringData data = new MonitoringData(getType(), getName());
 		data.setPath(getPath());
 		data.setHostname(HostUtil.getHostname());
 		data.setIpAddr(HostUtil.getHostIpAddress());

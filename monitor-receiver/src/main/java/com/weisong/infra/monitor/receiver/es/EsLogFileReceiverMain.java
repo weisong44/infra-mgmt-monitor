@@ -19,11 +19,13 @@ public class EsLogFileReceiverMain {
 	@Configuration
 	@Import({ CommonCombinedJavaConfig.class })
 	static public class JavaConfig {
+		
+		static private String clusterName;
+		static private String[] hostAndPorts;
+		
 		@Bean
-		EsLogWriter getOpenTsdbLogWriter() {
-			String clusterName = System.getProperty("es.cluster.name");
-			String hostAndPorts = System.getProperty("es.host.and.ports");
-			EsLogWriter writer = new EsLogWriter(clusterName, hostAndPorts.split(","));
+		EsLogWriter esLogWriter() {
+			EsLogWriter writer = new EsLogWriter(clusterName, hostAndPorts);
 			writer.start();
 			return writer;
 		}
@@ -43,16 +45,9 @@ public class EsLogFileReceiverMain {
 		}
 
 		String logFileName = args[0];
-		
-		System.setProperty("es.cluster.name", args[1]);
-		String hostAndPorts = "";
-		for(int i = 2; i < args.length; i++) {
-			if(hostAndPorts.isEmpty() == false) {
-				hostAndPorts += ",";
-			}
-			hostAndPorts += args[i];
-		}
-		System.setProperty("es.host.and.ports", hostAndPorts);
+		JavaConfig.clusterName = args[1];
+		JavaConfig.hostAndPorts = new String[args.length - 2];
+		System.arraycopy(args, 2, JavaConfig.hostAndPorts, 0, args.length - 2);
 
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(JavaConfig.class);
 		LogWriter writer = ctx.getBean(LogWriter.class);

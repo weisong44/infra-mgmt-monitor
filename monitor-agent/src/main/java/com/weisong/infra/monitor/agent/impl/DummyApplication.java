@@ -52,6 +52,11 @@ public class DummyApplication {
 		}
 		
 		@Override
+		public String getType() {
+			return "module";
+		}
+		
+		@Override
 		public String getName() {
 			return "wave";
 		}

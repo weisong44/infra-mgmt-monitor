@@ -23,6 +23,11 @@ final public class MainModuleReporter extends BaseModuleReporter {
     }
     
 	@Override
+	public String getType() {
+		return "application";
+	}
+	
+	@Override
 	public String getName() {
 		return appName;
 	}

@@ -36,6 +36,11 @@ public class DefaultMonitoringAgentTest {
 		}
 		
 		@Override
+		public String getType() {
+			return "module";
+		}
+		
+		@Override
 		public String getName() {
 			return "test";
 		}

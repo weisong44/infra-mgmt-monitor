@@ -1,6 +1,8 @@
 package com.weisong.infra.monitor.receiver.es;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.cluster.node.DiscoveryNode;
@@ -25,6 +27,12 @@ public class EsLogWriter implements LogWriter {
 	final static public long RECONNECT_INTERVAL = 5000L;
 	
 	final static public SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss Z");
+	final static public SimpleDateFormat dfIso8601;
+	
+	static {
+		dfIso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+		dfIso8601.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,9 +76,6 @@ public class EsLogWriter implements LogWriter {
 		}
 		logger.info(msg);
 		logger.info("Started");
-		
-		//createIndex(INDEX_NAME, INDEX_TYPE_MIT);
-		//createIndex(INDEX_NAME, INDEX_TYPE_METRICS);
 	}
 	
 	public void stop() {
@@ -99,7 +104,8 @@ public class EsLogWriter implements LogWriter {
 			.field("host", data.getHostname())
 			.field("address", data.getIpAddr())
 			.field("application", appName)
-			.field("module", data.getName());
+			.field("name", data.getName())
+			.field("type", data.getType());
 		for(String name : data.getProperties().keySet()) {
 			Object value = data.getProperties().get(name);
 			builder.field(name, value);
@@ -122,6 +128,7 @@ public class EsLogWriter implements LogWriter {
 			String metricName = LogWriterUtil.getMetricName(name).toString();
 			Number value = data.getCounters().get(name);
 			String id = String.format("%s:%s:%d", data.getPath(), metricName, timestamp);
+			String iso8601Timestamp = dfIso8601.format(df.parse(data.getTimestamp()));
 			builder = XContentFactory.jsonBuilder()
 				.startObject()
 					.field("path", data.getPath())
@@ -130,7 +137,7 @@ public class EsLogWriter implements LogWriter {
 					.field("application", appName)
 					.field("module", data.getName())
 					.field("timestamp", data.getTimestamp())
-					.field("@timestamp", data.getTimestamp())
+					.field("@timestamp", iso8601Timestamp)
 					.field("name", metricName)
 					.field("value", value)
 				.endObject();
